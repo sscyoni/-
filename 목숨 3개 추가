@@ -1,0 +1,18 @@
+life = 3  # ▼ 목숨
+
+# ▼ 충돌 처리 수정
+hits = pygame.sprite.spritecollide(player, enemy_group, False)
+if hits:
+    life -= 1
+    print("Life -1!", "현재 남은 목숨:", life)
+
+    # 플레이어 위치 초기화
+    player.rect.center = (WIDTH // 2, HEIGHT // 2)
+
+    if life <= 0:
+        print("GAME OVER")
+        game_over = True
+
+# ▼ 라이프 화면 표시
+life_text = font.render(f"Life: {life}", True, (0, 0, 0))
+screen.blit(life_text, (10, 50))
