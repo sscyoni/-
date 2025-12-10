@@ -1,0 +1,83 @@
+enemy_group = pygame.sprite.Group()
+
+# ▼ 5개 똥 랜덤 생성
+for i in range(5):
+    x = random.randint(0, WIDTH - 40)
+    y = random.randint(0, HEIGHT - 40)
+    enemy = Enemy(x, y)
+    enemy_group.add(enemy)
+    all_sprites.add(enemy)
+
+
+
+#금색사과 추가
+# ▼ 사과 이미지 두 종류 추가
+apple_red = pygame.transform.scale(pygame.image.load("apple.png"), (40, 40))
+apple_gold = pygame.transform.scale(pygame.image.load("gold_apple.png"), (40, 40))
+
+# ▼ spawn_apple 함수 수정
+def spawn_apple():
+    side = random.choice(["left", "right", "top", "bottom"])
+    size = 40
+
+    if side == "left":
+        x = -size
+        y = random.randint(0, HEIGHT - size)
+        vx = random.randint(2, 4)
+        vy = random.randint(-2, 2)
+    elif side == "right":
+        x = WIDTH
+        y = random.randint(0, HEIGHT - size)
+        vx = -random.randint(2, 4)
+        vy = random.randint(-2, 2)
+    elif side == "top":
+        x = random.randint(0, WIDTH - size)
+        y = -size
+        vx = random.randint(-2, 2)
+        vy = random.randint(2, 4)
+    else:
+        x = random.randint(0, WIDTH - size)
+        y = HEIGHT
+        vx = random.randint(-2, 2)
+        vy = -random.randint(2, 4)
+
+    rect = pygame.Rect(x, y, size, size)
+
+    # 🎯 10% 확률로 금사과 생성
+    if random.random() < 0.1:
+        apples.append({"rect": rect, "vx": vx, "vy": vy, "type": "gold"})
+    else:
+        apples.append({"rect": rect, "vx": vx, "vy": vy, "type": "red"})
+
+
+#충돌수정
+for apple in apples:
+    rect = apple["rect"]
+    vx = apple["vx"]
+    vy = apple["vy"]
+    apple_type = apple["type"]    # ← 사과 종류 가져오기
+
+    rect.x += vx
+    rect.y += vy
+
+    if rect.right < 0 or rect.left > WIDTH or rect.bottom < 0 or rect.top > HEIGHT:
+        continue
+
+    # 🎯 플레이어가 사과 먹음
+    if player.rect.colliderect(rect):
+        if apple_type == "red":
+            score += 1        # 빨간 사과
+        else:
+            score += 3        # 금 사과
+        continue
+
+    new_apples.append(apple)
+
+
+#그리기 수정
+for apple in apples:
+    if apple["type"] == "red":
+        screen.blit(apple_red, apple["rect"])
+    else:
+        screen.blit(apple_gold, apple["rect"])
+
