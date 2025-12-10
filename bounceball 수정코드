@@ -1,0 +1,20 @@
+#무한루프 아니게 하기
+def game_loop():
+    if not ball.hit_bottom:
+        ball.draw()
+        paddle.draw()
+    tk.after(10, game_loop)
+
+game_loop()
+tk.mainloop()
+
+
+# 게임끝날때 메세지 춛가
+if ball.hit_bottom:
+    canvas.create_text(250, 200, text="GAME OVER", font=("Arial", 20), fill="red")
+#키를 뗴면 멈추기
+self.canvas.bind_all('<KeyRelease-Left>', self.stop)
+self.canvas.bind_all('<KeyRelease-Right>', self.stop)
+
+def stop(self, evt):
+    self.x = 0
